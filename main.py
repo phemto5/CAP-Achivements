@@ -1,28 +1,24 @@
-# print("hello");
 import pandas as pd
-# import numpy
-import math
-# import csv
 
 filePath = 'Spokane_Squadron_promotion_report_8_9_2023.csv'
 
 with open(filePath) as file:
-    # csvFile = csv.reader(file)
-    # for lines in csvFile:
-    #     print(lines)
     dataFrame = pd.read_csv(filePath, sep=",")
-
     for index, row in dataFrame.iterrows():
-        print("|------------------------------------------------")
-        print("|"+row["NameLast"] + ", " + row["NameFirst"])
-        print("|-"+"Working on Acivement:" + row["AchvName"])
-        
-        for  kname in dataFrame.columns:
-            if str(row[kname]).isdigit():
-                    if float(row[kname]) != 0:
+        markdownFile = f'{row["Email"]}.md'
+        with open(markdownFile, "w+") as mdf:
+            mdf.write("# "+row["NameLast"] + ", " + row["NameFirst"] + "\n")
+            mdf.write(">*Working on Achievement*:\n" )
+            mdf.write(">**" + row["AchvName"]+ "**\n\n")
+            for  kname in dataFrame.columns:
+                if str(row[kname]).isdigit():
+                        if float(row[kname]) != 0:
+                            row.pop(kname)
+                else:
+                    if not pd.isna(row[kname]):
                         row.pop(kname)
-            else:
-                if pd.isna(row[kname]):
-                    row.pop(kname)
-        print(row.to_markdown())
-        print("|------------------------------------------------\n")
+                    else:
+                        row[kname] = 'Not Completed'
+            mdf.writelines(row.to_markdown())
+            mdf.write("\n")
+            mdf.close()

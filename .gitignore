@@ -1,2 +1,8 @@
 .venv
 .vscode
+.obsidian
+
+*.com.md
+*.gov.md
+*.org.md
+*.net.md
