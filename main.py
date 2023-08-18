@@ -19,6 +19,6 @@ with open(filePath) as file:
                         row.pop(kname)
                     else:
                         row[kname] = 'Not Completed'
-            mdf.writelines(row.to_markdown())
+            mdf.writelines(row.to_markdown(index=True))
             mdf.write("\n")
             mdf.close()
