@@ -16,11 +16,13 @@ with open(filePath) as file:
         print("|------------------------------------------------")
         print("|"+row["NameLast"] + ", " + row["NameFirst"])
         print("|-"+"Working on Acivement:" + row["AchvName"])
+        
         for  kname in dataFrame.columns:
             if str(row[kname]).isdigit():
-                    if float(row[kname]) == 0:
-                        print(f"|-- {kname}")
+                    if float(row[kname]) != 0:
+                        row.pop(kname)
             else:
                 if pd.isna(row[kname]):
-                    print(f"|-- {kname}")
+                    row.pop(kname)
+        print(row.to_markdown())
         print("|------------------------------------------------\n")
