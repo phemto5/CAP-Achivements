@@ -1,7 +1,18 @@
 import pandas as pd
-
+import mdpdf
+# import aspose.words as aw
 filePath = 'Spokane_Squadron_promotion_report_8_9_2023.csv'
-
+def removeNotNull(row):
+                if str(row[kname]).isdigit():
+                        if float(row[kname]) != 0:
+                            row.pop(kname)
+                else:
+                    if not pd.isna(row[kname]):
+                        row.pop(kname)
+                    else:
+                        row[kname] = 'Not Completed'
+                return row
+    
 with open(filePath) as file:
     dataFrame = pd.read_csv(filePath, sep=",")
     for index, row in dataFrame.iterrows():
@@ -11,14 +22,34 @@ with open(filePath) as file:
             mdf.write(">*Working on Achievement*:\n" )
             mdf.write(">**" + row["AchvName"]+ "**\n\n")
             for  kname in dataFrame.columns:
-                if str(row[kname]).isdigit():
-                        if float(row[kname]) != 0:
+                match kname:
+                    case "AEInteractiveModule":
+                        if row["AchvName"] != "Achievement 8":
                             row.pop(kname)
-                else:
-                    if not pd.isna(row[kname]):
-                        row.pop(kname)
-                    else:
-                        row[kname] = 'Not Completed'
+                    case "AEModuleOrTest":
+                        if row["AchvName"] != "Achievement 8":
+                            row.pop(kname)
+                    case "AEDateP":
+                        if row["AchvName"] != "Achievement 8":
+                            row.pop(kname)
+                    case "EssayDate":
+                        if row["AchvName"] != "Achievement 8":
+                            row.pop(kname)
+                    case "SpeachDate":
+                        if row["AchvName"] != "Achievement 8":
+                            row.pop(kname)
+                    case _:
+                        row = removeNotNull(row)
+                # if str(row[kname]).isdigit():
+                #         if float(row[kname]) != 0:
+                #             row.pop(kname)
+                # else:
+                #     if not pd.isna(row[kname]):
+                #         row.pop(kname)
+                #     else:
+                #         row[kname] = 'Not Completed'
             mdf.writelines(row.to_markdown(index=True))
             mdf.write("\n")
             mdf.close()
+            markdownFilePDF = markdownFile+".pdf"
+
