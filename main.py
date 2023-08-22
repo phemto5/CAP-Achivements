@@ -1,20 +1,18 @@
 import pandas as pd
-import mdpdf
-# import aspose.words as aw
+import md2pdf.core as mp
 filePath = 'Spokane_Squadron_promotion_report_8_9_2023.csv'
 notCompletedMsg = "Not Completed"
-def makeAllStrings(row,kname):
-                if str(row[kname]).isdigit():
-                        if float(row[kname]) == 0:
-                            # row.pop(kname)
-                            row[kname] = notCompletedMsg
-                else:
-                    if pd.isna(row[kname] or row[kname] == 'h'):
-                    #     row.pop(kname)
-                    # else:
-                        row[kname] = notCompletedMsg
-                # return row
-    
+
+def makeAllStrings(row, kname):
+    if kname in row:
+        if str(row[kname]).isdigit():
+            if float(row[kname]) == 0:
+                row[kname] = notCompletedMsg
+        else:
+            if pd.isna(row[kname] or row[kname] == 'h'):
+                row[kname] = notCompletedMsg
+
+
 with open(filePath) as file:
     dataFrame = pd.read_csv(filePath, sep=",")
     for index, row in dataFrame.iterrows():
@@ -23,31 +21,17 @@ with open(filePath) as file:
             lName = row["NameLast"]
             fName = row["NameFirst"]
             achvName = row["AchvName"]
-            mdf.write("# "+lName + ", " + fName + "\n")
-            mdf.write("> *Working on Achievement*:\n" )
-            mdf.write("> **" + achvName + "**\n\n")
-            for  kname in row.index:
-                row = makeAllStrings(row,kname)
+            mdf.write("# "+lName + ", " + fName + "\n\n")
+            mdf.write("### *Working on Achievement*:**" + achvName + "**\n\n")
+            # mdf.write("> "+row["Email"]+"\n\n")
+            for kname in row.index:
+                makeAllStrings(row, kname)
                 match kname:
                     case  "AEInteractiveDate" | "AEModuleOrTest":
-                        if row["AEModuleOrTest"] != row["AEInteractiveDate"] :
-                        # if(row["AEModuleOrTest"] ):
-                            # testString =str(row["AEModuleOrTest"]) 
-                            # if testString != '0' and testString != 'h':
-                            #     row.pop(kname)
-                            # else:
-                            #     row[kname] = testString
-                            # if row["AEModuleOrTest"] != notCompletedMsg:
-                            row.pop("AEModuleOrTest")
-                            row.pop("AEInteractiveDate")
-                            # else:
-                            #     row.pop("AEModuleOrTest")
-                    # case "AEModuleOrTest"  :
-                    #     if row["AEInteractiveDate"]:
-                    #         if  not pd.isna(row["AEInteractiveDate"]):
-                    #             row.pop(kname)
-                    #         else:
-                    #             row[kname] = notCompletedMsg
+                        if kname in row:
+                            if row["AEModuleOrTest"] != row["AEInteractiveDate"]:
+                                row.pop("AEModuleOrTest")
+                                row.pop("AEInteractiveDate")
                     case "EssayDate":
                         if achvName != "Achievement 8":
                             row.pop(kname)
@@ -70,3 +54,4 @@ with open(filePath) as file:
             mdf.write("\n")
             mdf.close()
             markdownFilePDF = markdownFile+".pdf"
+            mp.md2pdf( pdf_file_path=markdownFilePDF,md_file_path=markdownFile,css_file_path='style.css')

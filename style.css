@@ -1,0 +1,19 @@
+blockquote {
+  background-color: #6495ed;
+  margin: auto;
+  border: #000000;
+
+}
+h1 {
+    color: #033f88;
+}
+h3 {
+    color: #033f88;
+}
+table {
+  border: 2px #000000;
+  font-family: monospace;
+}
+tr {
+  border: 2px #000000;
+}
