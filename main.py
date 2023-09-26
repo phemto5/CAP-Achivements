@@ -2,6 +2,7 @@ import pandas as pd
 import md2pdf.core as mp
 from PyPDF2 import PdfMerger
 import sys
+import os
 filePath = 'Spokane_Squadron_promotion_report_8_9_2023.csv'
 notCompletedMsg = "Not Completed"
 allCadetsFile = 'Cadets.All.pdf'
@@ -66,6 +67,10 @@ def ProcessRecord(row):
                       md_file_path=mdf.name,
                       css_file_path='style.css')
             merger.append(open(markdownFilePDF, 'rb'))
+            # commentout next lines for individual files
+            os.remove(markdownFilePDF)
+            os.remove(markdownFile)
+            
 
 
 with open(filePath) as file:
